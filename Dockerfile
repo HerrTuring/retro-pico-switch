@@ -29,7 +29,7 @@ RUN mkdir /app
 WORKDIR /app
 COPY . .
 
-RUN cmake -B build -DPICO_BOARD=pico_w -S .
+RUN cmake -B build -DPICO_BOARD=pico2 -S .
 RUN make -C build/
 
 # Separate the Binaries for Exporting
