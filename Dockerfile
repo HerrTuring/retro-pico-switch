@@ -25,11 +25,12 @@ RUN git clone --depth 1 https://github.com/raspberrypi/pico-sdk $SDK_PATH && \
 ENV PICO_SDK_PATH=$SDK_PATH
 
 # Build the Project
+ARG PICO_BOARD=pico_w
 RUN mkdir /app
 WORKDIR /app
 COPY . .
 
-RUN cmake -B build -DPICO_BOARD=pico_w -S .
+RUN cmake -B build -DPICO_BOARD=$PICO_BOARD -S .
 RUN make -C build/
 
 # Separate the Binaries for Exporting
