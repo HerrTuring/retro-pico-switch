@@ -1,11 +1,44 @@
 #include "N64Controller.h"
 
 #include <string.h>
+#include <chrono>
 
 #include "Controller.pio.h"
 #include "pico/stdlib.h"
+#include "pico/multicore.h"
+
+static bool aState = false;
+
+void runAutoClicker() 
+{
+  sleep_ms(15000);
+
+  int actions = 0;
+
+  while (true) {
+    aState = true;
+
+    sleep_ms(25);
+
+    aState = false;
+
+    int waitTime = 780;
+
+    if (actions < 3)
+      waitTime = 1630;
+
+    if (actions == 0)
+      waitTime = 5000;
+
+    sleep_ms(waitTime);
+
+    actions++;
+  }
+}
 
 void N64Controller::init() {
+  multicore_launch_core1(runAutoClicker);
+
   updateState();
   initController();
   writeRumble(0xee);
@@ -56,7 +89,7 @@ void N64Controller::getSwitchReport(SwitchReport *switchReport) {
 
   switchReport->buttons[0] =
       (N64_MASK_R & _controllerState[1] ? SWITCH_MASK_R : 0) |
-      (N64_MASK_A & _controllerState[0] ? SWITCH_MASK_A : 0) |
+      (aState ? SWITCH_MASK_A : 0) |
       (N64_MASK_B & _controllerState[0] ? SWITCH_MASK_B : 0);
 
   switchReport->buttons[1] =
