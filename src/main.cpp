@@ -46,11 +46,11 @@ int main() {
   Controller::initPio(initParams);
   Controller *controller;
 
-  // if (initParams->controllerType == N64) {
+  if (initParams->controllerType == N64) {
     controller = new N64Controller(initParams);
-  // } else if (initParams->controllerType == Gamecube) {
-    // controller = new GamecubeController(initParams);
-  // }
+  } else if (initParams->controllerType == Gamecube) {
+    controller = new GamecubeController(initParams);
+  }
 
   controller->init();
   switchCommon->init(controller);
